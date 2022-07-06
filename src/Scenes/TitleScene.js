@@ -22,7 +22,7 @@ export default class TitleScene extends Phaser.Scene {
         title = this.add.text(
             this.cameras.main.centerX,
             this.cameras.main.centerY - 100,
-            "A Wonderful Time :)",
+            "A Wonderful Time",
             {font: '48px monospace',fill:"#fff"}
         )
         .setOrigin(0.5)
