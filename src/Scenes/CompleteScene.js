@@ -20,12 +20,21 @@ export default class CompleteScene extends Phaser.Scene{
                     "Wasn't that wonderful?",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
+                break;
+            
+            case 1440:
+                this.add.text(
+                    this.cameras.main.centerX,
+                    this.cameras.main.centerY,
+                    "Having fun?",
+                    {font:"48px monospace", fill:"#fff"}
+                ).setOrigin(0.5)
         }
 
         this.load.on('complete',function(){
             this.toTitle()
         }.bind(this))
-        this.timedEvent = this.time.delayedCall(1000, this.toTitle, [], this);
+        this.timedEvent = this.time.delayedCall(3000, this.toTitle, [], this);
         
     }
 }

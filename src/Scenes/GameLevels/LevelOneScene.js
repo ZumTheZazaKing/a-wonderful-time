@@ -11,9 +11,9 @@ var jumpSound;
 var collectSound;
 
 
-export default class GameScene extends Phaser.Scene{
+export default class LevelOneScene extends Phaser.Scene{
     constructor(){
-        super('Game')
+        super('LevelOne')
     }
       
     create(){
@@ -26,16 +26,16 @@ export default class GameScene extends Phaser.Scene{
         collectSound = this.sound.add('collect')
 
         this.add.image(0,0,'sky').setOrigin(0,0)
-        scoreText = this.add.text(16,16, 'Score: 0', {fontSize:'32px', fill:'#000'});
+        scoreText = this.add.text(16,16, 'Score: 0', {fontSize:'32px', fill:'#000'}).setScrollFactor(0);
 
         platforms = this.physics.add.staticGroup();
 
         platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-        platforms.create(600, 400, 'ground');
-        platforms.create(50, 250, 'ground');
-        platforms.create(750, 220, 'ground');
+        platforms.create(this.cameras.main.centerX, 250, 'ground')
+        platforms.create(0,400,'ground');
+        platforms.create(800,400,'ground')
 
-        player = this.physics.add.sprite(100,450,'dude')
+        player = this.physics.add.sprite(100,500,'dude')
         player.setBounce(0.2)
         player.setCollideWorldBounds(true)
         this.physics.add.collider(player,platforms)
@@ -60,6 +60,13 @@ export default class GameScene extends Phaser.Scene{
             repeat:-1
         })
 
+        //code for camera
+        this.cameras.main.startFollow(player,true)
+        this.cameras.main.setBounds(0,0,800,600)
+        //code for world bounds
+        this.physics.world.setBounds(0,0,800,600)
+
+        //keyboard controls 
         cursors = this.input.keyboard.createCursorKeys()
 
         stars = this.physics.add.group({
@@ -79,11 +86,11 @@ export default class GameScene extends Phaser.Scene{
             collectSound.play()
             this.model.score += 10;
             scoreText.setText("Score: " + this.model.score)
-            console.log(this.model.score)
 
             switch(this.model.score){
                 case 720:
                     nicebg.destroy()
+                    localStorage.setItem('score',JSON.stringify(this.model.score))
                     this.scene.start('Complete')
                     break;
             }
