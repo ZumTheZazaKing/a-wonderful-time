@@ -7,6 +7,8 @@ var stars;
 var scoreText;
 var bombs;
 var nicebg;
+var jumpSound;
+var collectSound;
 
 
 export default class GameScene extends Phaser.Scene{
@@ -20,6 +22,8 @@ export default class GameScene extends Phaser.Scene{
 
         nicebg = this.sound.add('nicebg',{loop:true})
         nicebg.play();
+        jumpSound = this.sound.add('jump')
+        collectSound = this.sound.add('collect')
 
         this.add.image(0,0,'sky').setOrigin(0,0)
         scoreText = this.add.text(16,16, 'Score: 0', {fontSize:'32px', fill:'#000'});
@@ -71,8 +75,10 @@ export default class GameScene extends Phaser.Scene{
         this.physics.add.overlap(player,stars,collectStar,null,this)
         function collectStar(player,star){
             star.disableBody(true, true)
+            collectSound.play()
             this.model.score += 10;
             scoreText.setText("Score: " + this.model.score)
+            console.log(this.model.score)
 
             if(stars.countActive(true) === 0){
                 stars.children.iterate(function(child){
@@ -118,6 +124,7 @@ export default class GameScene extends Phaser.Scene{
 
         if(cursors.up.isDown && player.body.touching.down){
             player.setVelocityY(-330)
+            jumpSound.play()
         }
     }
 }
