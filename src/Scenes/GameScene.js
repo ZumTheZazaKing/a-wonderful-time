@@ -73,12 +73,20 @@ export default class GameScene extends Phaser.Scene{
         })
         this.physics.add.collider(stars,platforms)
         this.physics.add.overlap(player,stars,collectStar,null,this)
+
         function collectStar(player,star){
             star.disableBody(true, true)
             collectSound.play()
             this.model.score += 10;
             scoreText.setText("Score: " + this.model.score)
             console.log(this.model.score)
+
+            switch(this.model.score){
+                case 720:
+                    nicebg.destroy()
+                    this.scene.start('Complete')
+                    break;
+            }
 
             if(stars.countActive(true) === 0){
                 stars.children.iterate(function(child){
