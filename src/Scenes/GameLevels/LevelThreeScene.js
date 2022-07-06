@@ -59,10 +59,6 @@ export default class LevelThreeScene extends Phaser.Scene{
             nicebg.destroy()
         }
 
-        watchers = this.physics.add.group();
-        watchers.create(500,430,'bomb').setVelocityX(-100).setCollideWorldBounds(true).refreshBody();
-        this.physics.add.collider(player,watchers,dead,null,this)
-
         this.anims.create({
             key:'left',
             frames: this.anims.generateFrameNumbers('dude',{start:0,end:3}),
@@ -134,6 +130,10 @@ export default class LevelThreeScene extends Phaser.Scene{
         bombs = this.physics.add.group()
         this.physics.add.collider(bombs, platforms)
         this.physics.add.collider(player,bombs,dead,null,this)
+
+        watchers = this.physics.add.group();
+        watchers.create(500,430,'bomb').setVelocityX(-100).setCollideWorldBounds(true).refreshBody();
+        this.physics.add.collider(player,watchers,dead,null,this)
         
 
     }
