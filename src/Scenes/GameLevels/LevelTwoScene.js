@@ -113,11 +113,12 @@ export default class LevelTwoScene extends Phaser.Scene{
         this.physics.add.collider(player,bombs,hitBomb,null,this)
         function hitBomb(player,bomb){
             this.physics.pause();
+            nicebg.destroy()
             player.setTint("0xff0000")
             player.anims.play('turn')
             this.model.score = 720
             this.scene.start('GameOver')
-            nicebg.destroy()
+            
         }
         
 

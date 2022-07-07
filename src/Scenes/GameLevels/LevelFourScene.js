@@ -5,25 +5,25 @@ var player;
 var cursors;
 var stars;
 var scoreText;
-var bombs;
 var nicebg;
 var jumpSound;
 var collectSound;
-var bg;
 var watchers;
+var bg;
+var velocity = 0;
 
 
-export default class LevelThreeScene extends Phaser.Scene{
+export default class LevelFourScene extends Phaser.Scene{
     constructor(){
-        super('LevelThree')
+        super('LevelFour')
     }
       
     create(){
 
         this.model = this.sys.game.globals.model;
-        this.cameras.main.setBounds(0,0,1000,800)
+        this.cameras.main.setBounds(0,0,1400,600)
         //code for world bounds
-        this.physics.world.setBounds(0,0,1000,800)
+        this.physics.world.setBounds(0,0,1400,600)
 
         nicebg = this.sound.add('nicebg',{loop:true})
         nicebg.play();
@@ -37,16 +37,10 @@ export default class LevelThreeScene extends Phaser.Scene{
         scoreText = this.add.text(16,16, 'Score: '+this.model.score, {fontSize:'32px', fill:'#000'}).setScrollFactor(0);
 
         platforms = this.physics.add.staticGroup();
-        platforms.create(500, 768, 'ground').setScale(3).refreshBody();
-        platforms.create(50, 580, 'ground');
-        platforms.create(950, 580, 'ground');
-        platforms.create(500, 450, 'ground');
-        platforms.create(500, 300, 'ground').setScale(0.5).refreshBody();
-        platforms.create(200, 200, 'ground')
-        platforms.create(800,200,'ground')
+        platforms.create(700, 468, 'ground').setScale(4).refreshBody();
+        platforms.create(700,150,'ground').setScale(4).refreshBody();
 
-        player = this.physics.add.sprite(100,650,'dude')
-        player.setBounce(0.2)
+        player = this.physics.add.sprite(100,350,'dude')
         player.setCollideWorldBounds(true)
         this.physics.add.collider(player,platforms)
 
@@ -55,7 +49,8 @@ export default class LevelThreeScene extends Phaser.Scene{
             this.physics.pause();
             player.setTint("0xff0000")
             player.anims.play('turn')
-            this.model.score = 1440
+            this.model.score = 2160
+            velocity = 0;
             this.scene.start('GameOver')
         }
 
@@ -103,7 +98,7 @@ export default class LevelThreeScene extends Phaser.Scene{
         stars = this.physics.add.group({
             key:'star',
             repeat:11,
-            setXY:{x:12,y:0,stepX:83, stepY:60},
+            setXY:{x:12,y:300,stepX:116,},
         })
         stars.children.iterate(function(child){
             child.setBounceY(Phaser.Math.FloatBetween(0.1,0.2))
@@ -119,9 +114,9 @@ export default class LevelThreeScene extends Phaser.Scene{
             scoreText.setText("Score: " + this.model.score)
 
             switch(this.model.score){
-                case 2160:
+                case 2880:
                     nicebg.destroy()
-                    this.scene.start('Complete')
+                    this.scene.start('Knife')
                     localStorage.setItem('score',JSON.stringify(this.model.score))
                     break;
             }
@@ -131,29 +126,23 @@ export default class LevelThreeScene extends Phaser.Scene{
                     child.enableBody(true,child.x,child.y,true,true)
                 })
 
-                let x = (player.x < 500) ? Phaser.Math.Between(500,1000) : Phaser.Math.Between(0,500)
-                let y = (player.y < 400) ? Phaser.Math.Between(400,800) : Phaser.Math.Between(0,400)
+                let x = (player.x < 700) ? 1050 : 350;
+                velocity += 50;
 
-                var bomb = bombs.create(x,y,'bomb')
-                bomb.setBounce(1)
-                bomb.setCollideWorldBounds(true);
-                bomb.setVelocity(Phaser.Math.Between(-200,200),500)
+                var watcher = watchers.create(x,350,'watcherhw')
+                watcher.setVelocityX(velocity)
+                watcher.refreshBody()
+                watcher.setCollideWorldBounds(true)
+                if(watcher.body.velocity.x > 0){
+                    watcher.anims.play("watcherRight")
+                }else{
+                    watcher.anims.play("watcherLeft")
+                }
             }
         }
 
-        bombs = this.physics.add.group()
-        this.physics.add.collider(bombs, platforms)
-        this.physics.add.collider(player,bombs,dead,null,this)
-
         watchers = this.physics.add.group();
-        watchers.create(500,400,'watcherhw').setVelocityX(100).setCollideWorldBounds(true).refreshBody();
-        
-        watchers.children.iterate(function(child){
-            child.anims.play("watcherRight",true)
-        })
-        
         this.physics.add.collider(player,watchers,dead,null,this)
-        
 
     }
 
@@ -175,19 +164,19 @@ export default class LevelThreeScene extends Phaser.Scene{
             player.setVelocityY(-330)
             jumpSound.play()
         }
-
-       this.physics.collide(watchers, platforms, this.patrolPlatform, null, this)
+        this.physics.collide(watchers, platforms, this.patrolPlatform, null, this)
     }
 
     patrolPlatform(enemy, platform) {
-       // if enemy moving to right and has started to move over right edge of platform
-        if (enemy.body.velocity.x > 0 && enemy.x + enemy.width/2 > platform.x + platform.width / 2) {
-            enemy.body.velocity.x *= -1; // reverse direction
+        console.log()
+         //if enemy moving to right and has started to move over right edge of platform
+        if (enemy.x + enemy.width/2 === 1400){
+            enemy.body.velocity.x = velocity * -1; // reverse direction
             enemy.anims.play("watcherLeft",true)
-
+ 
         //or enemy moving to left and has started to move over left edge of platform
-        }else if(enemy.body.velocity.x < 0 && enemy.x - enemy.width/2 < platform.x - platform.width /2){
-            enemy.body.velocity.x *= -1; // reverse direction
+        }else if(enemy.x - enemy.width/2 === 0){
+            enemy.body.velocity.x = -velocity * -1; // reverse direction
             enemy.anims.play("watcherRight",true)
         }
     }

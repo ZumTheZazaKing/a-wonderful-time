@@ -28,6 +28,9 @@ export default class TitleScene extends Phaser.Scene {
                     case 1440:
                         this.scene.start('LevelThree')
                         break;
+                    case 2160:
+                        this.scene.start('LevelFour')
+                        break;
                     default:
                         return;
                 }

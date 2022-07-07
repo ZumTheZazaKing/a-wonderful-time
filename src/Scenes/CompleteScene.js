@@ -29,6 +29,23 @@ export default class CompleteScene extends Phaser.Scene{
                     "Having fun?",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
+                break;
+
+            case 2160:
+                this.add.text(
+                    this.cameras.main.centerX,
+                    this.cameras.main.centerY,
+                    "Why are you doing this?",
+                    {font:"48px monospace", fill:"#fff"}
+                ).setOrigin(0.5)
+                break;
+            case 2880:
+                this.add.text(
+                    this.cameras.main.centerX,
+                    this.cameras.main.centerY,
+                    "Go no further",
+                    {font:"48px monospace", fill:"#fff"}
+                ).setOrigin(0.5)
         }
 
         this.load.on('complete',function(){

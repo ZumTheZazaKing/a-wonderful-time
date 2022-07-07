@@ -1,12 +1,17 @@
 import Phaser from 'phaser';
 import dudeSrc from '../assets/images/dude.png';
-import platformSrc from '../assets/images/platform.png';
+import dudeSmileSrc from '../assets/images/dudeSmile.png'
+import watcherHwSrc from '../assets/images/watcherhw.png'
+import platformSrc from '../assets/images/platform2.png';
 import bombSrc from '../assets/images/bomb.png';
 import skySrc from '../assets/images/sky.png';
 import starSrc from '../assets/images/star.png';
+import knifeSrc from '../assets/images/knife.png';
+
 import niceBgSrc from '../assets/audio/nicebg.mp3';
 import jumpSoundSrc from '../assets/audio/jump.mp3'
 import collectSoundSrc from '../assets/audio/collect.mp3';
+import knifeDrawSrc from '../assets/audio/knifeDraw.mp3';
 
 export default class PreloaderScene extends Phaser.Scene {
     constructor () {
@@ -78,11 +83,15 @@ export default class PreloaderScene extends Phaser.Scene {
         this.load.audio('nicebg',[niceBgSrc])
         this.load.audio('jump',[jumpSoundSrc])
         this.load.audio('collect',[collectSoundSrc])
+        this.load.audio('knifeDraw',[knifeDrawSrc])
         this.load.image('sky', skySrc);
         this.load.image('ground', platformSrc);
         this.load.image('star', starSrc);
         this.load.image('bomb', bombSrc);
+        this.load.image('knife',knifeSrc)
+        this.load.spritesheet('dudeSmile',dudeSmileSrc,{frameWidth:36, frameHeight:56});
         this.load.spritesheet('dude', dudeSrc, {frameWidth:36, frameHeight:56});
+        this.load.spritesheet('watcherhw',watcherHwSrc,{frameWidth:56, frameHeight:24});
         
     }
 }
