@@ -13,7 +13,7 @@ export default class TitleScene extends Phaser.Scene {
 
         this.model = this.sys.game.globals.model;
 
-        playButton = this.add.text(this.cameras.main.centerX,this.cameras.main.centerY,'Play',
+        playButton = this.add.text(this.cameras.main.centerX,this.cameras.main.centerY,'Start',
         {font:'32px monospace', fill:'#fff'})
             .setOrigin(0.5)
             .setInteractive({useHandCursor:true})
@@ -31,6 +31,8 @@ export default class TitleScene extends Phaser.Scene {
                     case 2160:
                         this.scene.start('LevelFour')
                         break;
+                    case 2880:
+                        this.scene.start('FirstBoss')
                     default:
                         return;
                 }
@@ -39,8 +41,21 @@ export default class TitleScene extends Phaser.Scene {
             .on('pointerout', () => playButton.setStyle({fill:"#fff"}))
 
         switch(this.model.score){
+            case 0:
+            case 720:
             case 1440:
+            case 2160:
+                title = "A Wonderful Time"
+                titleColor = "#fff"
+                break;
+            
+            case 2880:
                 title = "A Wonderful Time :)"
+                titleColor = "#fff"
+                break;
+
+            default:
+                title = "A Wonderful Time"
                 titleColor = "#fff"
         }
 

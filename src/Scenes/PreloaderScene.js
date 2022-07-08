@@ -3,15 +3,23 @@ import dudeSrc from '../assets/images/dude.png';
 import dudeSmileSrc from '../assets/images/dudeSmile.png'
 import watcherHwSrc from '../assets/images/watcherhw.png'
 import platformSrc from '../assets/images/platform2.png';
+import bloodplatformSrc from '../assets/images/bloodplatform.png';
 import bombSrc from '../assets/images/bomb.png';
 import skySrc from '../assets/images/sky.png';
+import graySkySrc from '../assets/images/graysky.png'
+import grayPlatformSrc from '../assets/images/grayplatform.png';
+import watchingYouSrc from '../assets/images/watchingYou.png';
 import starSrc from '../assets/images/star.png';
 import knifeSrc from '../assets/images/knife.png';
+import firstBossShellSrc from '../assets/images/firstBossShell.png'
 
 import niceBgSrc from '../assets/audio/nicebg.mp3';
+import whispersBgSrc from '../assets/audio/whispersbg.mp3'
 import jumpSoundSrc from '../assets/audio/jump.mp3'
 import collectSoundSrc from '../assets/audio/collect.mp3';
 import knifeDrawSrc from '../assets/audio/knifeDraw.mp3';
+import minderTeleportSrc from '../assets/audio/minderTeleport.mp3';
+import knifeSlashSrc from '../assets/audio/knifeSlash.mp3';
 
 export default class PreloaderScene extends Phaser.Scene {
     constructor () {
@@ -84,12 +92,21 @@ export default class PreloaderScene extends Phaser.Scene {
         this.load.audio('jump',[jumpSoundSrc])
         this.load.audio('collect',[collectSoundSrc])
         this.load.audio('knifeDraw',[knifeDrawSrc])
+        this.load.audio('whispersbg',[whispersBgSrc])
+        this.load.audio('minderTeleport', [minderTeleportSrc]);
+        this.load.audio('knifeSlash',[knifeSlashSrc])
+
         this.load.image('sky', skySrc);
+        this.load.image('watchingYou', watchingYouSrc);
+        this.load.image('graysky', graySkySrc)
         this.load.image('ground', platformSrc);
+        this.load.image('bloodplatform', bloodplatformSrc);
+        this.load.image('grayplatform', grayPlatformSrc);
         this.load.image('star', starSrc);
         this.load.image('bomb', bombSrc);
-        this.load.image('knife',knifeSrc)
-        this.load.spritesheet('dudeSmile',dudeSmileSrc,{frameWidth:36, frameHeight:56});
+        this.load.image('knife',knifeSrc);
+        this.load.image('firstBossShell', firstBossShellSrc)
+        this.load.image('dudeSmile',dudeSmileSrc,{frameWidth:36, frameHeight:56});
         this.load.spritesheet('dude', dudeSrc, {frameWidth:36, frameHeight:56});
         this.load.spritesheet('watcherhw',watcherHwSrc,{frameWidth:56, frameHeight:24});
         

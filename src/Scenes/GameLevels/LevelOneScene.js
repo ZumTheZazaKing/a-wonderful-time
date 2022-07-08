@@ -26,7 +26,7 @@ export default class LevelOneScene extends Phaser.Scene{
         collectSound = this.sound.add('collect')
 
         this.add.image(0,0,'sky').setOrigin(0,0)
-        scoreText = this.add.text(16,16, 'Score: 0', {fontSize:'32px', fill:'#000'}).setScrollFactor(0);
+        scoreText = this.add.text(16,16, 'Score: 0', {font:'32px monospace', fill:'#000'}).setScrollFactor(0);
 
         platforms = this.physics.add.staticGroup();
 

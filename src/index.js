@@ -6,6 +6,7 @@ import LevelOneScene from './Scenes/GameLevels/LevelOneScene';
 import LevelTwoScene from './Scenes/GameLevels/LevelTwoScene';
 import LevelThreeScene from './Scenes/GameLevels/LevelThreeScene';
 import LevelFourScene from './Scenes/GameLevels/LevelFourScene';
+import FirstBossScene from './Scenes/BossLevels/FirstBossScene';
 
 import KnifeScene from './Scenes/Cutscenes/KnifeScene'
 
@@ -32,6 +33,7 @@ class Game extends Phaser.Game {
     this.scene.add('LevelThree', LevelThreeScene);
     this.scene.add('LevelFour', LevelFourScene)
     this.scene.add('Knife', KnifeScene)
+    this.scene.add('FirstBoss', FirstBossScene)
 
     this.scene.start('Boot');
   }

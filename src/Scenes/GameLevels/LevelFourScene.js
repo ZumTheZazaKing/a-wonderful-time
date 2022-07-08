@@ -34,7 +34,7 @@ export default class LevelFourScene extends Phaser.Scene{
         .setOrigin(0,0)
         .setScale(2)
 
-        scoreText = this.add.text(16,16, 'Score: '+this.model.score, {fontSize:'32px', fill:'#000'}).setScrollFactor(0);
+        scoreText = this.add.text(16,16, 'Score: '+this.model.score, {font:'32px monospace', fill:'#000'}).setScrollFactor(0);
 
         platforms = this.physics.add.staticGroup();
         platforms.create(700, 468, 'ground').setScale(4).refreshBody();
