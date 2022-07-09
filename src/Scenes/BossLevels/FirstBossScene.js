@@ -6,12 +6,21 @@ var cursors;
 var bombs;
 var jumpSound;
 var boss;
+var bossTheme;
 var bossTeleport;
 var watchers;
 var knifeSlash;
+var minderBlast;
+
+var progressBar;
+var progressBox;
+var bossName;
+
+var minderTeleportParticles;
+var minderShootParticles;
 
 var shootAtPlayer;
-var phase = 0;
+var health = 7;
 var playerHit = false;
 
 export default class FirstBossScene extends Phaser.Scene{
@@ -26,15 +35,18 @@ export default class FirstBossScene extends Phaser.Scene{
         jumpSound = this.sound.add('jump')
         bossTeleport = this.sound.add('minderTeleport')
         knifeSlash = this.sound.add('knifeSlash')
+        minderBlast = this.sound.add('minderBlast')
+        bossTheme = this.sound.add('minderTheme',{loop:true})
+        bossTheme.play()
 
         this.add.image(0,0,'graysky').setOrigin(0,0)
 
         platforms = this.physics.add.staticGroup();
 
-        platforms.create(400, 568, 'grayplatform').setScale(2).refreshBody();
+        let ground = platforms.create(400, 568, 'grayplatform').setScale(2).refreshBody();
         platforms.create(this.cameras.main.centerX, 250, 'grayplatform')
-        platforms.create(0,400,'grayplatform');
-        platforms.create(800,400,'grayplatform')
+        let platform1 = platforms.create(0,400,'grayplatform');
+        let platform2 = platforms.create(800,400,'grayplatform')
 
         boss = this.physics.add.sprite(400, 350, 'firstBossShell');
         boss.body.setAllowGravity(false)
@@ -46,6 +58,28 @@ export default class FirstBossScene extends Phaser.Scene{
 
         let playerBossCollide = this.physics.add.collider(player, boss, hitBoss,null,this)
 
+        minderTeleportParticles = this.add.particles('minderTeleportParticle').createEmitter({
+            x:-1000,
+            y:-1000,
+            speed: { min: 200, max: 800 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.1, end: 0 },
+            //active: false,
+            lifespan: 600,
+            gravityY:0
+        });
+
+        minderShootParticles = this.add.particles('minderShootParticle').createEmitter({
+            x:-1000,
+            y:-1000,
+            speed: { min: 200, max: 800 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.1, end: 0 },
+            //active: false,
+            lifespan: 300,
+            gravityY:0
+        });
+
         function hitBoss(playerObj, bossObj){
 
             let x = (player.x < 400) ? 700 : 100
@@ -55,14 +89,20 @@ export default class FirstBossScene extends Phaser.Scene{
             playerHit = true;
             bossTeleport.play();
             knifeSlash.play();
+
             boss.setPosition(x,50)
             boss.setVelocityY(0)
             boss.setVelocityX(0)
             boss.setTint("0xff0000")
             player.setTint("0xff0000")
             bossHover.stop()
-            phase += 1
-            this.time.delayedCall(1000,()=>{
+
+            minderTeleportParticles.setPosition(x,50);
+            minderTeleportParticles.explode(50)
+
+            health -= 1
+
+            this.time.delayedCall(500,()=>{
                 playerHit = false;
                 player.clearTint()
             })
@@ -71,19 +111,51 @@ export default class FirstBossScene extends Phaser.Scene{
 
             })
 
-            switch(phase){
-                case 1:
+            progressBar = this.add.graphics();
+            progressBox = this.add.graphics();
+
+            progressBox.fillStyle(0x000000, 0.8);
+            progressBox.fillRect(100, 550,600,50);
+            progressBar.fillStyle(0xff0000, 1);
+            progressBar.fillRect(100, 550,health*100,50);
+            bossName = this.add.text(
+                400,575,'Mind Minder',{font:'36px monospace',fill:'#fff'}
+            ).setOrigin(0.5)
+
+            switch(health){
+                case 6:
+                    boss.setTexture('minder')
                     watcherX = 400;
                     watcherY = 200;
                     break;
-                case 2:
+                case 5:
                     watcherX = 0;
                     watcherY = 300;
                     break;
 
-                case 3:
+                case 4:
                     watcherX = 650;
                     watcherY = 300;
+                    break;
+
+                case 3:
+                    watcherX = 400;
+                    watcherY = 500;
+                    break;
+
+                case 2:
+                    watcherX = 400;
+                    watcherY = 200;
+                    ground.disableBody(true,true)
+                    platform1.disableBody(true,true);
+                    platform2.disableBody(true,true);
+                    watchers.children.iterate(function(child){
+                        child.setCollideWorldBounds(false).refreshBody()
+                    })
+                    break;
+
+                case 0:
+                    console.log('hi')
                     break;
                 default:return
             }
@@ -94,7 +166,7 @@ export default class FirstBossScene extends Phaser.Scene{
 
         watchers = this.physics.add.group();
 
-        this.physics.add.collider(player,watchers,dead,null,this)
+        this.physics.add.collider(player,watchers,this.dead,null,this)
 
         //code for camera
         this.cameras.main.startFollow(player,true)
@@ -149,29 +221,44 @@ export default class FirstBossScene extends Phaser.Scene{
         cursors = this.input.keyboard.createCursorKeys()
 
         bombs = this.physics.add.group()
-        this.physics.add.collider(bombs,platforms);
-        this.physics.add.collider(player,bombs,dead,null,this)
-        function dead(player,bomb){
-            this.physics.pause();
-            player.setTint("0xff0000")
-            player.anims.play('turn')
-            this.model.score = 2880
-            phase = 0;
-            this.scene.start('GameOver')
-            
-        }
+        this.physics.add.collider(player,bombs,this.dead,null,this)
         
-        setInterval(bossShoot, 2000)
+        shootAtPlayer = setInterval(bossShoot, 1500)
+
+        let physicsObj = this.physics;
 
         function bossShoot(){
-            if(phase>0){
+            if(health<7){
                 console.log("Hello")
+                let bomb = bombs.create(boss.x, boss.y, 'bomb')
+                bomb.body.setAllowGravity(false)
+                physicsObj.moveToObject(bomb, player, 400)
+                minderShootParticles.setPosition(boss.x,50);
+                minderShootParticles.explode(25)
+                minderBlast.play()
+                let removeBomb = setTimeout(()=>{
+                    bomb.body.stop()
+                    bomb.disableBody(true,true)
+                    clearTimeout(removeBomb)
+                },5000)
             }
         }
 
     }
 
+    dead(){
+        this.physics.pause();
+        player.setTint("0xff0000")
+        player.anims.play('turn')
+        this.model.score = 2880
+        health = 7;
+        clearInterval(shootAtPlayer)
+        this.scene.start('GameOver')
+        
+    }
+
     update(){
+
         if(cursors.left.isDown && !playerHit){
             player.setVelocityX(-160);
             player.anims.play('left',true)
@@ -189,7 +276,17 @@ export default class FirstBossScene extends Phaser.Scene{
             player.setVelocityY(-330)
             jumpSound.play()
         }
+
+        if(player.y + player.height/2 === 600){
+            this.dead()
+        }
+
         this.physics.collide(watchers, platforms, this.patrolPlatform, null, this)
+
+        if(health<7){
+            Phaser.Actions.Rotate([boss],0.1)
+        }
+
     }
 
     patrolPlatform(enemy, platform) {

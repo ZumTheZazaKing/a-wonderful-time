@@ -13,6 +13,12 @@ import starSrc from '../assets/images/star.png';
 import knifeSrc from '../assets/images/knife.png';
 import firstBossShellSrc from '../assets/images/firstBossShell.png'
 
+import minder from '../assets/images/bossSprites/minder.png';
+import minderTheme from '../assets/audio/bossThemes/ZumTheZazaKing - A Wonderful Time _ Minder Boss Theme.mp3';
+
+import minderTeleportParticle from '../assets/images/particles/minderTeleportParticle.png';
+import minderShootParticle from '../assets/images/particles/minderShootParticle.png';
+
 import niceBgSrc from '../assets/audio/nicebg.mp3';
 import whispersBgSrc from '../assets/audio/whispersbg.mp3'
 import jumpSoundSrc from '../assets/audio/jump.mp3'
@@ -20,6 +26,7 @@ import collectSoundSrc from '../assets/audio/collect.mp3';
 import knifeDrawSrc from '../assets/audio/knifeDraw.mp3';
 import minderTeleportSrc from '../assets/audio/minderTeleport.mp3';
 import knifeSlashSrc from '../assets/audio/knifeSlash.mp3';
+import minderBlast from '../assets/audio/minderBlast.mp3'
 
 export default class PreloaderScene extends Phaser.Scene {
     constructor () {
@@ -95,6 +102,7 @@ export default class PreloaderScene extends Phaser.Scene {
         this.load.audio('whispersbg',[whispersBgSrc])
         this.load.audio('minderTeleport', [minderTeleportSrc]);
         this.load.audio('knifeSlash',[knifeSlashSrc])
+        this.load.audio('minderBlast',[minderBlast])
 
         this.load.image('sky', skySrc);
         this.load.image('watchingYou', watchingYouSrc);
@@ -106,6 +114,13 @@ export default class PreloaderScene extends Phaser.Scene {
         this.load.image('bomb', bombSrc);
         this.load.image('knife',knifeSrc);
         this.load.image('firstBossShell', firstBossShellSrc)
+
+        this.load.image('minder',minder)
+        this.load.audio('minderTheme',minderTheme)
+
+        this.load.image('minderTeleportParticle', minderTeleportParticle);
+        this.load.image('minderShootParticle', minderShootParticle)
+
         this.load.image('dudeSmile',dudeSmileSrc,{frameWidth:36, frameHeight:56});
         this.load.spritesheet('dude', dudeSrc, {frameWidth:36, frameHeight:56});
         this.load.spritesheet('watcherhw',watcherHwSrc,{frameWidth:56, frameHeight:24});
