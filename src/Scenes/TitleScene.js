@@ -54,6 +54,11 @@ export default class TitleScene extends Phaser.Scene {
                 titleColor = "#fff"
                 break;
 
+            case 3600:
+                title = "A Wonderful Time :)"
+                titleColor = "#ff0000"
+                break;
+
             default:
                 title = "A Wonderful Time"
                 titleColor = "#fff"

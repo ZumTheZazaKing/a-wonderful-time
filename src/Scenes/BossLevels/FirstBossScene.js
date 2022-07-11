@@ -6,21 +6,31 @@ var cursors;
 var bombs;
 var jumpSound;
 var boss;
-var bossTheme;
+var bossTheme1;
+var bossTheme2
 var bossTeleport;
 var watchers;
 var knifeSlash;
 var minderBlast;
 
+var henchmanShoot;
+var henchman;
+
 var progressBar;
 var progressBox;
 var bossName;
 
+var lastStand;
+var minderDeath;
+var minderExplode;
+
 var minderTeleportParticles;
 var minderShootParticles;
+var minderDeathRedParticles;
+var minderDeathBlackParticles;
 
 var shootAtPlayer;
-var health = 7;
+var health = 10;
 var playerHit = false;
 
 export default class FirstBossScene extends Phaser.Scene{
@@ -30,21 +40,26 @@ export default class FirstBossScene extends Phaser.Scene{
       
     create(){
 
+        this.input.setDefaultCursor("none")
+
         this.model = this.sys.game.globals.model;
 
         jumpSound = this.sound.add('jump')
         bossTeleport = this.sound.add('minderTeleport')
         knifeSlash = this.sound.add('knifeSlash')
         minderBlast = this.sound.add('minderBlast')
-        bossTheme = this.sound.add('minderTheme',{loop:true})
-        bossTheme.play()
+        bossTheme1 = this.sound.add('minderTheme1',{loop:true})
+        bossTheme2 = this.sound.add('minderTheme2')
+        minderDeath = this.sound.add('minderDeath')
+        minderExplode = this.sound.add('minderExplode')
+        
 
         this.add.image(0,0,'graysky').setOrigin(0,0)
 
         platforms = this.physics.add.staticGroup();
 
         let ground = platforms.create(400, 568, 'grayplatform').setScale(2).refreshBody();
-        platforms.create(this.cameras.main.centerX, 250, 'grayplatform')
+        let lastplatform = platforms.create(this.cameras.main.centerX, 250, 'grayplatform')
         let platform1 = platforms.create(0,400,'grayplatform');
         let platform2 = platforms.create(800,400,'grayplatform')
 
@@ -80,27 +95,52 @@ export default class FirstBossScene extends Phaser.Scene{
             gravityY:0
         });
 
+        minderDeathRedParticles = this.add.particles('minderShootParticle').createEmitter({
+            x:-2000,
+            y:-2000,
+            speed: { min: 800, max: 1200 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.1, end: 0.3 },
+            //active: false,
+            lifespan:1000,
+            gravityY:0
+        });
+
+        minderDeathBlackParticles = this.add.particles('minderTeleportParticle').createEmitter({
+            x:-2000,
+            y:-2000,
+            speed: { min: 800, max: 1200 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.1, end: 0.3 },
+            //active: false,
+            lifespan: 1000,
+            gravityY:0
+        });
+        
+
         function hitBoss(playerObj, bossObj){
 
-            let x = (player.x < 400) ? 700 : 100
+            health -= 1
+
+            let bossX =  (player.x < 400) ? (health < 3 ? 550 : 700) : (health < 3 ? 250 : 100);
+            let bossY = health <= 5 ? 200 : 50;
             let watcherX;
             let watcherY;
+            let velocityX = 200;
 
             playerHit = true;
             bossTeleport.play();
             knifeSlash.play();
-
-            boss.setPosition(x,50)
+            
+            boss.setPosition(bossX,bossY)
             boss.setVelocityY(0)
             boss.setVelocityX(0)
             boss.setTint("0xff0000")
             player.setTint("0xff0000")
             bossHover.stop()
 
-            minderTeleportParticles.setPosition(x,50);
+            minderTeleportParticles.setPosition(bossX,bossY);
             minderTeleportParticles.explode(50)
-
-            health -= 1
 
             this.time.delayedCall(500,()=>{
                 playerHit = false;
@@ -117,56 +157,92 @@ export default class FirstBossScene extends Phaser.Scene{
             progressBox.fillStyle(0x000000, 0.8);
             progressBox.fillRect(100, 550,600,50);
             progressBar.fillStyle(0xff0000, 1);
-            progressBar.fillRect(100, 550,health*100,50);
+            progressBar.fillRect(100, 550,health*60,50);
             bossName = this.add.text(
                 400,575,'Mind Minder',{font:'36px monospace',fill:'#fff'}
             ).setOrigin(0.5)
 
             switch(health){
-                case 6:
+                case 9:
+                    bossTheme1.play()
                     boss.setTexture('minder')
+                    boss.body.setSize(64,64)
                     watcherX = 400;
                     watcherY = 200;
                     break;
-                case 5:
+                case 8:
                     watcherX = 0;
                     watcherY = 300;
                     break;
 
-                case 4:
+                case 7:
                     watcherX = 650;
                     watcherY = 300;
                     break;
 
-                case 3:
+                case 6:
                     watcherX = 400;
                     watcherY = 500;
                     break;
 
-                case 2:
-                    watcherX = 400;
-                    watcherY = 200;
+                case 5:
+                    henchman = physicsObj.add.staticSprite(400,100,'minderHenchman')
                     ground.disableBody(true,true)
                     platform1.disableBody(true,true);
                     platform2.disableBody(true,true);
                     watchers.children.iterate(function(child){
-                        child.setCollideWorldBounds(false).refreshBody()
+                        child.disableBody(true,true)
                     })
-                    break;
+                    lastplatform.setPosition(400,400).refreshBody()
+                    return
+
+                case 2:
+                    bossTheme1.pause()
+                    bossTheme2.play();
+                    watchers.children.iterate(function(child){
+                        child.disableBody(true,true)
+                    })
+                    henchman.disableBody(true,true)
+                    return;
 
                 case 0:
-                    console.log('hi')
-                    break;
+                    setTimeout(()=>playerHit=true,600)
+                    physicsObj.world.removeCollider(playerBossCollide)
+                    minderTeleportParticles.setPosition(bossObj.x, bossObj.y);
+                    minderShootParticles.setPosition(bossObj.x, bossObj.y);
+                    minderTeleportParticles.explode(200);
+                    minderShootParticles.explode(150)
+                    minderExplode.play()
+                    bossTheme1.destroy()
+                    bossTheme2.destroy()
+                   
+                    setTimeout(() => {
+                        minderDeathRedParticles.setPosition(bossObj.x,bossObj.y)
+                        minderDeathBlackParticles.setPosition(bossObj.x,bossObj.y)
+                        this.cameras.main.shake(5000)
+                        minderDeath.play()
+                        minderExplode.destroy();
+                        
+                    },600)
+                    clearInterval(shootAtPlayer)
+                    setTimeout(() => {
+                        this.model.score = 3600
+                        localStorage.setItem('score',JSON.stringify(3600))
+                        minderDeath.destroy()
+                        this.scene.start('Complete')
+                        this.input.setDefaultCursor('default')
+                    },5000)
+                    return;
                 default:return
             }
 
-            let watcher = watchers.create(watcherX,watcherY,'watcherhw').setVelocityX(200).setCollideWorldBounds(true).refreshBody();
+            let watcher = watchers.create(watcherX,watcherY,'watcherhw').setVelocityX(velocityX).setCollideWorldBounds(true).refreshBody();
             watcher.anims.play("watcherRight",true)
         }
 
         watchers = this.physics.add.group();
 
-        this.physics.add.collider(player,watchers,this.dead,null,this)
+        //this.physics.add.collider(player,watchers,this.dead,null,this)
 
         //code for camera
         this.cameras.main.startFollow(player,true)
@@ -221,19 +297,18 @@ export default class FirstBossScene extends Phaser.Scene{
         cursors = this.input.keyboard.createCursorKeys()
 
         bombs = this.physics.add.group()
-        this.physics.add.collider(player,bombs,this.dead,null,this)
+        //this.physics.add.collider(player,bombs,this.dead,null,this)
         
         shootAtPlayer = setInterval(bossShoot, 1500)
 
         let physicsObj = this.physics;
 
         function bossShoot(){
-            if(health<7){
-                console.log("Hello")
+            if(health<10){
                 let bomb = bombs.create(boss.x, boss.y, 'bomb')
                 bomb.body.setAllowGravity(false)
                 physicsObj.moveToObject(bomb, player, 400)
-                minderShootParticles.setPosition(boss.x,50);
+                minderShootParticles.setPosition(boss.x,boss.y);
                 minderShootParticles.explode(25)
                 minderBlast.play()
                 let removeBomb = setTimeout(()=>{
@@ -244,15 +319,54 @@ export default class FirstBossScene extends Phaser.Scene{
             }
         }
 
+        lastStand = setInterval(()=>{
+            if(health<=2 && health >0){
+                    if(boss.x < 400 && player.x < 400){
+                        minderTeleportParticles.setPosition(550,200);
+                        minderTeleportParticles.explode(50)
+                        bossTeleport.play();
+                        boss.setPosition(550,200)
+                    }else if(boss.x > 400 && player.x > 400){
+                        minderTeleportParticles.setPosition(250,200);
+                        minderTeleportParticles.explode(50)
+                        bossTeleport.play();
+                        boss.setPosition(250,200)
+                    }
+            }
+        },1200)
+
+        henchmanShoot = setInterval(() => {
+            if(health <= 5 && health > 2){
+                let bomb = bombs.create(400, 100, 'bomb')
+                bomb.body.setAllowGravity(false)
+                physicsObj.moveToObject(bomb, player, 400)
+                minderShootParticles.setPosition(400,100);
+                minderShootParticles.explode(25)
+                minderBlast.play()
+                let removeBomb = setTimeout(()=>{
+                    bomb.body.stop()
+                    bomb.disableBody(true,true)
+                    clearTimeout(removeBomb)
+                },5000)
+            }
+        },2000)
+
     }
 
     dead(){
+        this.input.setDefaultCursor('default')
         this.physics.pause();
         player.setTint("0xff0000")
         player.anims.play('turn')
         this.model.score = 2880
-        health = 7;
+        health = 10;
         clearInterval(shootAtPlayer)
+        clearInterval(henchmanShoot)
+        clearInterval(lastStand)
+        if(health > 2){
+            bossTheme1.destroy()
+        }
+        bossTheme2.destroy();
         this.scene.start('GameOver')
         
     }
@@ -277,14 +391,18 @@ export default class FirstBossScene extends Phaser.Scene{
             jumpSound.play()
         }
 
-        if(player.y + player.height/2 === 600){
+        if(player.y + player.height/2 === 600 && health > 0){
             this.dead()
         }
 
         this.physics.collide(watchers, platforms, this.patrolPlatform, null, this)
 
-        if(health<7){
+        if(health<10 && health > 0){
             Phaser.Actions.Rotate([boss],0.1)
+        }
+
+        if(health <= 5 && health > 2){
+            Phaser.Actions.Rotate([henchman],0.1)
         }
 
     }

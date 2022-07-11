@@ -46,6 +46,15 @@ export default class CompleteScene extends Phaser.Scene{
                     "Go no further",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
+                break;
+            case 3600:
+                this.add.text(
+                    this.cameras.main.centerX,
+                    this.cameras.main.centerY,
+                    ":)",
+                    {font:"48px monospace", fill:"#ff0000"}
+                ).setOrigin(0.5)
+                break;
         }
 
         this.load.on('complete',function(){

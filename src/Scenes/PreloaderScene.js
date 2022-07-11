@@ -14,7 +14,10 @@ import knifeSrc from '../assets/images/knife.png';
 import firstBossShellSrc from '../assets/images/firstBossShell.png'
 
 import minder from '../assets/images/bossSprites/minder.png';
-import minderTheme from '../assets/audio/bossThemes/ZumTheZazaKing - A Wonderful Time _ Minder Boss Theme.mp3';
+import minderHenchman from '../assets/images/bossSprites/minderHenchman.png';
+import minderTheme1 from '../assets/audio/bossThemes/minderTheme1.mp3';
+import minderTheme2 from '../assets/audio/bossThemes/minderTheme2.mp3'
+import minderExplode from '../assets/audio/minderSounds/minderExplode.mp3'
 
 import minderTeleportParticle from '../assets/images/particles/minderTeleportParticle.png';
 import minderShootParticle from '../assets/images/particles/minderShootParticle.png';
@@ -24,9 +27,10 @@ import whispersBgSrc from '../assets/audio/whispersbg.mp3'
 import jumpSoundSrc from '../assets/audio/jump.mp3'
 import collectSoundSrc from '../assets/audio/collect.mp3';
 import knifeDrawSrc from '../assets/audio/knifeDraw.mp3';
-import minderTeleportSrc from '../assets/audio/minderTeleport.mp3';
+import minderTeleportSrc from '../assets/audio/minderSounds/minderTeleport.mp3';
 import knifeSlashSrc from '../assets/audio/knifeSlash.mp3';
-import minderBlast from '../assets/audio/minderBlast.mp3'
+import minderBlast from '../assets/audio/minderSounds/minderBlast.mp3'
+import minderDeath from '../assets/audio/minderSounds/minderDeath.mp3'
 
 export default class PreloaderScene extends Phaser.Scene {
     constructor () {
@@ -116,7 +120,11 @@ export default class PreloaderScene extends Phaser.Scene {
         this.load.image('firstBossShell', firstBossShellSrc)
 
         this.load.image('minder',minder)
-        this.load.audio('minderTheme',minderTheme)
+        this.load.image('minderHenchman',minderHenchman)
+        this.load.audio('minderTheme1',minderTheme1);
+        this.load.audio('minderTheme2',minderTheme2)
+        this.load.audio('minderDeath',minderDeath)
+        this.load.audio('minderExplode',minderExplode)
 
         this.load.image('minderTeleportParticle', minderTeleportParticle);
         this.load.image('minderShootParticle', minderShootParticle)
