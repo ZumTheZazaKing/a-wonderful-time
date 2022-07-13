@@ -242,7 +242,7 @@ export default class FirstBossScene extends Phaser.Scene{
 
         watchers = this.physics.add.group();
 
-        //this.physics.add.collider(player,watchers,this.dead,null,this)
+        this.physics.add.collider(player,watchers,this.dead,null,this)
 
         //code for camera
         this.cameras.main.startFollow(player,true)
@@ -297,7 +297,7 @@ export default class FirstBossScene extends Phaser.Scene{
         cursors = this.input.keyboard.createCursorKeys()
 
         bombs = this.physics.add.group()
-        //this.physics.add.collider(player,bombs,this.dead,null,this)
+        this.physics.add.collider(player,bombs,this.dead,null,this)
         
         shootAtPlayer = setInterval(bossShoot, 1500)
 

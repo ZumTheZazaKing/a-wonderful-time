@@ -17,7 +17,7 @@ export default class CompleteScene extends Phaser.Scene{
                 this.add.text(
                     this.cameras.main.centerX,
                     this.cameras.main.centerY,
-                    "Wasn't that wonderful?",
+                    "Searching...",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
                 break;
@@ -26,7 +26,7 @@ export default class CompleteScene extends Phaser.Scene{
                 this.add.text(
                     this.cameras.main.centerX,
                     this.cameras.main.centerY,
-                    "Having fun?",
+                    "Still searching...",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
                 break;
@@ -35,7 +35,7 @@ export default class CompleteScene extends Phaser.Scene{
                 this.add.text(
                     this.cameras.main.centerX,
                     this.cameras.main.centerY,
-                    "Why are you doing this?",
+                    "Getting closer...",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
                 break;
@@ -43,7 +43,7 @@ export default class CompleteScene extends Phaser.Scene{
                 this.add.text(
                     this.cameras.main.centerX,
                     this.cameras.main.centerY,
-                    "Go no further",
+                    "Found it",
                     {font:"48px monospace", fill:"#fff"}
                 ).setOrigin(0.5)
                 break;

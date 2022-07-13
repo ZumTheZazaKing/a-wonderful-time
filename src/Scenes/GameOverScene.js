@@ -19,11 +19,11 @@ export default class GameOverScene extends Phaser.Scene {
             case 2880:
                 timer = 3000;
                 let deathQuote = [
-                    'Where are those who said will come?',
-                    'You know what you did.',
-                    'All I wanted was someone...',
-                    'Look, they think you\'re a monster',
-                    'Humans are essentially the same.'
+                    'Entrance is forbidden.',
+                    'You may not pass.',
+                    'Your existence is a diseas.e',
+                    'Your efforts are futile.',
+                    'All this for what?'
                 ]
                 deathMsg = this.add.text(
                     this.cameras.main.centerX,
