@@ -15,6 +15,7 @@ import PreloaderScene from './Scenes/PreloaderScene';
 import TitleScene from './Scenes/TitleScene';
 import GameOverScene from './Scenes/GameOverScene';
 import CompleteScene from './Scenes/CompleteScene';
+import DemoScene from './Scenes/DemoScene';
 
 class Game extends Phaser.Game {
   constructor () {
@@ -27,6 +28,7 @@ class Game extends Phaser.Game {
     this.scene.add('Title', TitleScene)
     this.scene.add("GameOver", GameOverScene)
     this.scene.add('Complete',CompleteScene)
+    this.scene.add("Demo",DemoScene)
 
     this.scene.add('LevelOne', LevelOneScene);
     this.scene.add('LevelTwo', LevelTwoScene)

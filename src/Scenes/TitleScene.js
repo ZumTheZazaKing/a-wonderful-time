@@ -33,6 +33,10 @@ export default class TitleScene extends Phaser.Scene {
                         break;
                     case 2880:
                         this.scene.start('FirstBoss')
+                        break;
+                    case 3600:
+                        this.scene.start('Demo')
+                        
                     default:
                         return;
                 }

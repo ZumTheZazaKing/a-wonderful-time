@@ -18,17 +18,17 @@ export default class GameOverScene extends Phaser.Scene {
         switch(this.model.score){
             case 2880:
                 timer = 3000;
-                let deathQuote = [
+                let deathQuotes = [
                     'Entrance is forbidden.',
                     'You may not pass.',
-                    'Your existence is a diseas.e',
+                    'Your existence is a disease.',
                     'Your efforts are futile.',
                     'All this for what?'
                 ]
                 deathMsg = this.add.text(
                     this.cameras.main.centerX,
                     this.cameras.main.centerY,
-                    deathQuote[Math.floor(Math.random()*deathQuote.length)],
+                    deathQuotes[Math.floor(Math.random()*deathQuotes.length)],
                     style1
                 ).setOrigin(0.5)
                 break;
