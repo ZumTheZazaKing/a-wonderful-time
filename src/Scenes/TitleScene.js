@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 
-var playButton;
-var title;
-var titleColor;
+let playButton;
+let title;
+let titleColor;
+let resetButton;
 
 export default class TitleScene extends Phaser.Scene {
     constructor () {
@@ -44,6 +45,20 @@ export default class TitleScene extends Phaser.Scene {
             .on('pointerover',() => playButton.setStyle({fill:"#ff0000"}))
             .on('pointerout', () => playButton.setStyle({fill:"#fff"}))
 
+        if(this.model.score === 3600){
+            resetButton = this.add.text(this.cameras.main.centerX,this.cameras.main.centerY+50,'Reset',
+            {font:'32px monospace', fill:'#fff'})
+                .setOrigin(0.5)
+                .setInteractive({useHandCursor:true})
+                .on('pointerdown', function(pointer){
+                    localStorage.setItem('score',JSON.stringify(0))
+                    window.location.reload();
+                }.bind(this))
+                .on('pointerover',() => resetButton.setStyle({fill:"#ff0000"}))
+                .on('pointerout', () => resetButton.setStyle({fill:"#fff"}))
+
+        }
+
         switch(this.model.score){
             case 0:
             case 720:
@@ -65,7 +80,7 @@ export default class TitleScene extends Phaser.Scene {
 
             default:
                 title = "A Wonderful Time"
-                titleColor = "#fff"
+                titleColor = "#fff";
         }
 
         title = this.add.text(
