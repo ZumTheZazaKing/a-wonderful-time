@@ -85,6 +85,7 @@ export default class KnifeScene extends Phaser.Scene{
             noMove=true;
 
             this.time.delayedCall(3000,()=>{
+                this.cameras.main.setZoom(3);
                 smile=true;
                 whispersBg.destroy();
                 this.time.delayedCall(2000,()=>{
